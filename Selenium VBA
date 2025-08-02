@@ -1,0 +1,254 @@
+
+Sub yahooStart()
+'03/06/19 ds now using yahoo.com for the ID field
+
+Dim bot As New WebDriver
+bot.Start "chrome", "https://www.yahoo.com"
+bot.Get "/"
+
+'Type 'hello world' into google search box
+'''''bot.FindElementById("lst-ib").SendKeys "hello world"
+bot.FindElementById("uh-search-box").SendKeys "hello world"
+
+'enter key is better because if the overlay appears it still will submit the search!
+bot.SendKeys bot.Keys.Enter
+
+'Click the search button BY CLASS
+'bot.FindElementByClass("IconNavSearch").Click
+
+End Sub
+Sub googStart()
+'03/06/19 ds now using yahoo.com for the ID field, but can still find by NAME using name="q"
+
+Dim bot As New WebDriver
+bot.Start "chrome", "https://www.google.com"
+bot.Get "/"
+
+'Type 'hello world' into google search box USING BY NAME
+bot.FindElementByName("q").SendKeys "hello world"
+'''''bot.FindElementById("uh-search-box").SendKeys "hello world"
+
+'enter key is better because if the overlay appears it still will submit the search!
+bot.SendKeys bot.Keys.Enter
+
+'Click the search button BY NAME
+'bot.FindElementByName("btnK").Click
+
+End Sub
+
+
+'**************************************************************
+'**************************************************************
+'***  NOTE: Awful Valentine website is shut down, but we    ***
+'***  downloaded the page(s) so you can use the below code  ***
+'***  to load the HTML file from your computer              ***
+'**************************************************************
+'**************************************************************
+
+
+
+Sub byTag()
+'03/06/2019 ds awful-valentine.com is no longer online, so code has been changed to reflect the use of a file on your computer
+
+Dim bot As New WebDriver
+'bot.Start "chrome", "http://awful-valentine.com/purchase-forms/slow-ajax/"
+'bot.Get "/"
+myUrl = ThisWorkbook.Path & "\..\Awful Valentine Html\Slow Ajax   Valentine's Day Cards.htm"
+bot.Start "chrome", myUrl
+bot.Get myUrl
+
+End Sub
+Sub byClass()
+Dim bot As New WebDriver
+'bot.Start "chrome", "http://awful-valentine.com/purchase-forms/slow-ajax/"
+'bot.Get "/"
+myUrl = ThisWorkbook.Path & "\..\Awful Valentine Html\Slow Ajax   Valentine's Day Cards.htm"
+bot.Start "chrome", myUrl
+bot.Get myUrl
+
+
+End Sub
+Sub byLinkText()
+Dim bot As New WebDriver
+'bot.Start "chrome", "http://awful-valentine.com/purchase-forms/slow-ajax/"
+'bot.Get "/"
+myUrl = ThisWorkbook.Path & "\..\Awful Valentine Html\Slow Ajax   Valentine's Day Cards.htm"
+bot.Start "chrome", myUrl
+bot.Get myUrl
+
+
+
+End Sub
+
+Sub getAttribute()
+Dim bot As New WebDriver
+'bot.Start "chrome", "http://awful-valentine.com/purchase-forms/slow-ajax/"
+'bot.Get "/"
+myUrl = ThisWorkbook.Path & "\..\Awful Valentine Html\Slow Ajax   Valentine's Day Cards.htm"
+bot.Start "chrome", myUrl
+bot.Get myUrl
+
+
+
+End Sub
+
+
+
+Sub byCSS()
+Dim bot As New WebDriver
+bot.Start "chrome", "https://en.wikipedia.org/wiki/Special:Random"
+
+bot.Get "/"
+
+'find second h2 tag field using css selectors
+
+End Sub
+
+Sub fillValuesVersusSendKeys()
+
+Dim bot As New WebDriver
+bot.Start "chrome", "https://excelvbaisfun.com/sample-textbox/"
+bot.Get "/"
+
+'Type 'hello world' into google search box
+bot.FindElementById("myText").SendKeys "hello world"
+
+'send value immediately instead of typing
+myVar = "dan"
+cScript = "document.getElementById('myText').value='value here'"
+bot.ExecuteScript cScript
+
+
+End Sub
+
+
+
+Sub googleChangeAttributeExample()
+Dim bot As New WebDriver
+Dim ele As WebElement
+Dim picEle As WebElement
+bot.Start "chrome", "https://www.google.com"
+
+bot.Get "/"
+
+'    OLD WAY OF USING JAVASCRIPT TO UPDATE A FIELD
+'    cScript = "document.getElementById('myText').value='value here'"
+'    bot.ExecuteScript attrScript
+'
+'    OR
+'
+'    attrScript = "document.getElementsByName('q')[0].setAttribute('value', 'hello world')"
+'    bot.ExecuteScript attrScript
+
+
+
+Stop
+
+End Sub
+
+Function changeAttribute(ByRef cBot As WebDriver, ByRef ele As WebElement, whichAttr As String, toAttr As String)
+'assumes you already found the attribute
+
+'example change 'Maxlength' to '1000' or 'value' to '10' or 'class' to 'asdf_otherclass', etc
+
+attrScript = "arguments[0].setAttribute('" & whichAttr & "', '" & toAttr & "')"
+cBot.ExecuteScript attrScript, ele
+End Function
+
+
+
+Sub changeAttrDemoWiki()
+Dim bot As New WebDriver
+Dim ele As WebElement
+Dim picEle As WebElement
+bot.Start "chrome", "https://en.wikipedia.org/wiki/Special:Random"
+
+bot.Get "/"
+
+'find second h2 tag field using css selectors
+'secondH2Text = bot.FindElementByCss("h2:nth-of-type(2) > span:nth-of-type(2)").Text
+
+
+Set ele = bot.FindElementByXPath("//*[@id='n-mainpage-description']/a")
+
+Dim monkeyImgSrc As String
+monkeyImgSrc = "//upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Brown_Howler_Monkey_4.jpg/220px-Brown_Howler_Monkey_4.jpg"
+
+
+'NEW CHANGE ATTR FUNCTION BY DAN STRONG
+changeAttribute bot, ele, "href", "https://www.google.com"
+changeAttribute bot, ele, "style", "color:red" 'bright green color
+
+
+changeAttribute bot, ele, "style", "background-color: blue;padding:15px 25px;margin:10px;" 'bright green color
+
+'IF PICTURE EXISTS, CHANGE TO MONKEY IMAGE!
+For Each picEle In bot.FindElementsByTag("img")
+    changeAttribute bot, picEle, "src", monkeyImgSrc
+Next picEle
+'Set picEle = bot.FindElementByTag("img")
+'Set picEle = bot.FindElementByXPath("//*[@id='mw-content-text']/div/table[1]/tbody/tr[1]/td/a/img", Raise:=False)
+'If Not picEle Is Nothing Then
+'    changeAttribute bot, picEle, "src", monkeyImgSrc
+'Else
+'    Set picEle = bot.FindElementByXPath("//*[@id='mw-content-text']/div/table[2]/tbody/tr[2]/td/a/img", Raise:=False)
+'    If Not picEle Is Nothing Then
+'        changeAttribute bot, picEle, "src", monkeyImgSrc
+'    End If
+'End If
+
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sub HoverMouseAndClickSubMenu()
+Dim bot As New WebDriver
+'bot.Start "chrome", "http://awful-valentine.com/purchase-forms/slow-ajax/"
+'bot.Get "/"
+myUrl = ThisWorkbook.Path & "\..\Awful Valentine Html\Slow Ajax   Valentine's Day Cards.htm"
+bot.Start "chrome", myUrl
+bot.Get myUrl
+
+Dim menuItem As WebElement
+Set menuItem = bot.FindElementByClass("page-item-68")
+bot.Actions.MoveToElement(menuItem).Perform
+
+bot.FindElementByClass("page-item-108").Click
+
+End Sub
+
+
+
+Sub byMultipleTags()
+
+Dim bot As New WebDriver
+bot.Start "chrome", "https://en.wikipedia.org/wiki/Main_Page"
+bot.Get "/"
+
+'find each bullet paragraph by Tag
+Dim liList
+Set liList = bot.FindElementsByTag("li")
+
+End Sub
