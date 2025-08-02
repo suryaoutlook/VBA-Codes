@@ -1,0 +1,17 @@
+Sub Exercise04a()
+Dim bot As New Selenium.WebDriver, anchorElements As WebElements, anchorLinks As List
+bot.Start "chrome", "https://en.wikipedia.org"
+bot.Get "/"
+
+Stop
+'get links
+Set anchorElements = bot.FindElementsByTag("a")
+Set anchorLinks = anchorElements.Attribute("href")
+
+'sort
+anchorLinks.Sort
+
+'visit link #50
+bot.Get anchorLinks(50)
+
+End Sub
